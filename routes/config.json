@@ -1,0 +1,9 @@
+{
+  "auth": {
+		"user": "Nexon@Admin2020",
+		"pass": "NexonPass@Admin2020"
+    },
+    "connectionURL": "https://ropsten.infura.io/v3/92a626fb48cc4368a08cb87b51b6e967",
+    "contractAddress": "0x7c233BAd8D8bfB00eB720C6a0cf241c5e76B8A36"
+  }
+
