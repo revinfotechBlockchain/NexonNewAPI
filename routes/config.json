@@ -4,6 +4,10 @@
 		"pass": "NexonPass@Admin2020"
     },
     "connectionURL": "https://ropsten.infura.io/v3/92a626fb48cc4368a08cb87b51b6e967",
-    "contractAddress": "0x7c233BAd8D8bfB00eB720C6a0cf241c5e76B8A36"
+    "contractAddress": "0x178b33308d98D4FF91a4d06972E616335CB2895A",
+    "oldContractAddress": "0x7c233BAd8D8bfB00eB720C6a0cf241c5e76B8A36"
+    
   }
+
+ 
 

@@ -66,49 +66,49 @@ cron.schedule('30 * * * * *', async () => {
 });
 
 
-cron.schedule('30 * * * * *', async () => {
-    console.log("Cron for BTC Claim tokens")
-    var startUpdatesIndex = 1;
-    var newContract = await new web3.eth.Contract(abi, contractAddress);
-    await newContract && newContract.methods.getBTCClaimCount().call().then(async output => {
-        for (i = startUpdatesIndex; i <= output.toString(); i++) {
-            var id = i;
-            await newContract.methods.getUserAddressForClaimBTC(id).call().then(async out => {
-                await newContract.methods.getClaimedBTCAddress(id).call().then(async out1 => {
-                    await newContract.methods.getRawBTCAmount(id).call().then(async out2 => {
-                        await newContract.methods.getClaimedAmountByBTC(id).call().then(async out3 => {
-                            await newContract.methods.getDateOfClaimBTC(id).call().then(async out4 => {
-                                if (out4 != '', out3 != '', out2 != '', out1 != '', out != '')
-                                    var obj = { Id: id, Day: out4.toString(), BTCAddress: out1, BTCAmount: out2.toString(), ClaimRYZ: out3.toString(), UserTronAddress: out }
-                                await BTCDatabase.findOneAndUpdate({ Id: id }, obj, { new: true, upsert: true }, (err, doc) => {
-                                    if (!err) {
-                                        startUpdatesIndex = 1;
-                                        console.log("New Entry Added in BTC claim")
-                                    }
-                                    else {
-                                        console.log({ error: 'Error during Json insertion insertion : ' + err });
-                                    }
-                                });
-                            }).catch(err => {
-                                console.log(err);
-                            });
-                        }).catch(err => {
-                            console.log(err);
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                }).catch(err => {
-                    console.log(err);
-                });
-            }).catch(err => {
-                console.log(err);
-            });
-        }
-    }).catch(err => {
-        console.log(err);
-    });
-});
+// cron.schedule('30 * * * * *', async () => {
+//     console.log("Cron for BTC Claim tokens")
+//     var startUpdatesIndex = 1;
+//     var newContract = await new web3.eth.Contract(abi, contractAddress);
+//     await newContract && newContract.methods.getBTCClaimCount().call().then(async output => {
+//         for (i = startUpdatesIndex; i <= output.toString(); i++) {
+//             var id = i;
+//             await newContract.methods.getUserAddressForClaimBTC(id).call().then(async out => {
+//                 await newContract.methods.getClaimedBTCAddress(id).call().then(async out1 => {
+//                     await newContract.methods.getRawBTCAmount(id).call().then(async out2 => {
+//                         await newContract.methods.getClaimedAmountByBTC(id).call().then(async out3 => {
+//                             await newContract.methods.getDateOfClaimBTC(id).call().then(async out4 => {
+//                                 if (out4 != '', out3 != '', out2 != '', out1 != '', out != '')
+//                                     var obj = { Id: id, Day: out4.toString(), BTCAddress: out1, BTCAmount: out2.toString(), ClaimRYZ: out3.toString(), UserTronAddress: out }
+//                                 await BTCDatabase.findOneAndUpdate({ Id: id }, obj, { new: true, upsert: true }, (err, doc) => {
+//                                     if (!err) {
+//                                         startUpdatesIndex = 1;
+//                                         console.log("New Entry Added in BTC claim")
+//                                     }
+//                                     else {
+//                                         console.log({ error: 'Error during Json insertion insertion : ' + err });
+//                                     }
+//                                 });
+//                             }).catch(err => {
+//                                 console.log(err);
+//                             });
+//                         }).catch(err => {
+//                             console.log(err);
+//                         });
+//                     }).catch(err => {
+//                         console.log(err);
+//                     });
+//                 }).catch(err => {
+//                     console.log(err);
+//                 });
+//             }).catch(err => {
+//                 console.log(err);
+//             });
+//         }
+//     }).catch(err => {
+//         console.log(err);
+//     });
+// });
 
 cron.schedule('0 0 0 * * *', async () => {
     let date_ob = new Date();
