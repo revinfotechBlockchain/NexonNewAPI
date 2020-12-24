@@ -18,52 +18,115 @@ const BTCDatabase = mongoose.model('BTCDatabase');
 const UserAddressAndStakeID = mongoose.model('UserAddressAndStakeID');
 const TransformTokens = mongoose.model('TransformTokens');
 const referalManager = mongoose.model('ReferalManager');
+const NexDatabase = mongoose.model('NexDatabase');
 
 //Modules exporter
 
-cron.schedule('30 * * * * *', async () => {
-    console.log("Cron for Staker executed")
-    var startUpdatesIndex = 1;
-    var newContract = await new web3.eth.Contract(abi, contractAddress);
-    await newContract && newContract.methods.getStakingCount().call().then(async output => {
-        for (i = startUpdatesIndex; i <= output.toString(); i++) {
-            var id = i;
-            await newContract.methods.getTokenLockstatus(id).call().then(async out => {
-                await newContract.methods.getStakingTokenById(id).call().then(async out1 => {
-                    await newContract.methods.getStakingStartTimeById(id).call().then(async out2 => {
-                        await newContract.methods.getStakingEndTimeById(id).call().then(async out3 => {
-                            await newContract.methods.getActiveStakesById(id).call().then(async out4 => {
-                                if (out4.toString() != '', out3.toString() != '', out2.toString() != '', out1.toString() != '', out.toString() != '')
-                                    var obj = { StakeId: id, StakerAddress: out4.toString(), StakingStartTime: out2.toString(), StakingEndTime: out3.toString(), StakerTokens: (out1.toString() / 1000000000000000000).toFixed(6), TokenTransactionstatus: out.toString(), Amount: 0, Interest: 0, BigPayDay: 0, Shares: 0 };
-                                await UserAddressAndStakeID.findOneAndUpdate({ StakeId: id }, obj, { new: true, upsert: true }, (err, doc) => {
-                                    if (!err) {
-                                        startUpdatesIndex = 1;
-                                        console.log("New Entry Added in Staker Corn")
-                                    }
-                                    else {
-                                        console.log({ error: 'Error during Json insertion insertion : ' + err });
-                                    }
-                                });
-                            }).catch(err => {
-                                console.log(err);
-                            });
-                        }).catch(err => {
-                            console.log(err);
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                }).catch(err => {
-                    console.log(err);
-                });
-            }).catch(err => {
-                console.log(err);
-            });
-        }
-    }).catch(err => {
-        console.log(err);
-    });
-});
+// cron.schedule('30 * * * * *', async () => {
+//     console.log("Cron for Staker executed")
+//     var startUpdatesIndex = 1;
+//     var newContract = await new web3.eth.Contract(abi, contractAddress);
+//     await newContract && newContract.methods.getStakingCount().call().then(async output => {
+//         for (i = startUpdatesIndex; i <= output.toString(); i++) {
+//             var id = i;
+//             await newContract.methods.getTokenLockstatus(id).call().then(async out => {
+//                 await newContract.methods.getStakingTokenById(id).call().then(async out1 => {
+//                     await newContract.methods.getStakingStartTimeById(id).call().then(async out2 => {
+//                         await newContract.methods.getStakingEndTimeById(id).call().then(async out3 => {
+//                             await newContract.methods.getActiveStakesById(id).call().then(async out4 => {
+//                                 if (out4.toString() != '', out3.toString() != '', out2.toString() != '', out1.toString() != '', out.toString() != '')
+//                                     var obj = { StakeId: id, StakerAddress: out4.toString(), StakingStartTime: out2.toString(), StakingEndTime: out3.toString(), StakerTokens: (out1.toString() / 1000000000000000000).toFixed(6), TokenTransactionstatus: out.toString(), Amount: 0, Interest: 0, BigPayDay: 0, Shares: 0 };
+//                                     console.log("obj: ", obj.StakingStartTime, obj.StakingEndTime)
+//                                     if( obj.StakingEndTime - obj.StakingStartTime ==31536000){
+//                                         console.log("here")
+//                                         await NexDatabase.findOneAndUpdate({ StakeId: id }, obj, { new: true, upsert: true }, (err, doc) => {
+//                                             if (!err) {
+//                                                 startUpdatesIndex = 1;
+//                                                 console.log("New Entry Added in performClaim Corn")
+//                                             }
+//                                             else {
+//                                                 console.log({ error: 'Error during Json insertion insertion performClaim : ' + err });
+//                                             }
+//                                         });
+
+//                                     } else {
+//                                         console.log("mmhere")
+//                                         await UserAddressAndStakeID.findOneAndUpdate({ StakeId: id }, obj, { new: true, upsert: true }, (err, doc) => {
+//                                             if (!err) {
+//                                                 startUpdatesIndex = 1;
+//                                                 console.log("New Entry Added in Staker Corn")
+//                                             }
+//                                             else {
+//                                                 console.log({ error: 'Error during Json insertion insertion normal stake : ' + err });
+//                                             }
+//                                         });
+
+//                                     }
+                                    
+//                             }).catch(err => {
+//                                 console.log(err);
+//                             });
+//                         }).catch(err => {
+//                             console.log(err);
+//                         });
+//                     }).catch(err => {
+//                         console.log(err);
+//                     });
+//                 }).catch(err => {
+//                     console.log(err);
+//                 });
+//             }).catch(err => {
+//                 console.log(err);
+//             });
+//         }
+//     }).catch(err => {
+//         console.log(err);
+//     });
+// });
+
+// cron.schedule('30 * * * * *', async () => {
+//     console.log("Cron for BTC Claim tokens")
+//     var startUpdatesIndex = 1;
+//     var newContract = await new web3.eth.Contract(abi, contractAddress);
+//     await newContract && newContract.methods.getBTCClaimCount().call().then(async output => {
+//         for (i = startUpdatesIndex; i <= output.toString(); i++) {
+//             var id = i;
+//             await newContract.methods.getUserAddressForClaimBTC(id).call().then(async out => {
+//                 await newContract.methods.getClaimedBTCAddress(id).call().then(async out1 => {
+//                     await newContract.methods.getRawBTCAmount(id).call().then(async out2 => {
+//                         await newContract.methods.getClaimedAmountByBTC(id).call().then(async out3 => {
+//                             await newContract.methods.getDateOfClaimBTC(id).call().then(async out4 => {
+//                                 if (out4 != '', out3 != '', out2 != '', out1 != '', out != '')
+//                                     var obj = { Id: id, Day: out4.toString(), BTCAddress: out1, BTCAmount: out2.toString(), ClaimRYZ: out3.toString(), UserTronAddress: out }
+//                                 await BTCDatabase.findOneAndUpdate({ Id: id }, obj, { new: true, upsert: true }, (err, doc) => {
+//                                     if (!err) {
+//                                         startUpdatesIndex = 1;
+//                                         console.log("New Entry Added in BTC claim")
+//                                     }
+//                                     else {
+//                                         console.log({ error: 'Error during Json insertion insertion : ' + err });
+//                                     }
+//                                 });
+//                             }).catch(err => {
+//                                 console.log(err);
+//                             });
+//                         }).catch(err => {
+//                             console.log(err);
+//                         });
+//                     }).catch(err => {
+//                         console.log(err);
+//                     });
+//                 }).catch(err => {
+//                     console.log(err);
+//                 });
+//             }).catch(err => {
+//                 console.log(err);
+//             });
+//         }
+//     }).catch(err => {
+//         console.log(err);
+//     });
+// });
 
 
 // cron.schedule('30 * * * * *', async () => {
@@ -110,46 +173,46 @@ cron.schedule('30 * * * * *', async () => {
 //     });
 // });
 
-cron.schedule('0 0 0 * * *', async () => {
-    let date_ob = new Date();
-    var indexDate = 0;
-    await TransformTokens.find().sort({ Day: -1 }).limit(1).then(
-        async function (doc) {
-            if (doc != '') {
-                var raw = doc[0].Day
-                indexDate = parseInt(raw) + 1;
-            }
-            else {
-                indexDate = 0;
-            }
-            var newContract = await new web3.eth.Contract(abi, contractAddress);
-            await newContract && newContract.methods.getpurchaseableTokensAddress().call().then(async out3 => {
-                await newContract.methods.balanceOf(out3.toString()).call().then(async out4 => {
-                    await newContract.methods.getTotalETH().call().then(async out1 => {
-                        await newContract.methods.getPriceToken().call().then(async out2 => {
-                            var transformTokens = new TransformTokens();
-                            transformTokens.Day = indexDate;
-                            transformTokens.NEXONAvailable = (parseInt(out4) / 1000000000000000000).toFixed(6);
-                            transformTokens.TotalETH = (parseInt(out1) / 1000000000000000000).toFixed(6);
-                            transformTokens.NEXONETH = parseInt(out2);
-                            transformTokens.Closing = 0;
-                            transformTokens.YourNEXON = 0;
-                            transformTokens.YourETH = 0;
-                            await transformTokens.save({ Day: indexDate }, (err, doc) => {
-                                if (!err) {
-                                    startUpdatesIndex = 0;
-                                    console.log({ response: 'update successful for transform cron!!' });
-                                }
-                                else {
-                                    console.log({ error: 'Error during Json insertion insertion : ' + err });
-                                }
-                            });
-                        });
-                    });
-                });
-            });
-        });
-});
+// cron.schedule('0 0 0 * * *', async () => {
+//     let date_ob = new Date();
+//     var indexDate = 0;
+//     await TransformTokens.find().sort({ Day: -1 }).limit(1).then(
+//         async function (doc) {
+//             if (doc != '') {
+//                 var raw = doc[0].Day
+//                 indexDate = parseInt(raw) + 1;
+//             }
+//             else {
+//                 indexDate = 0;
+//             }
+//             var newContract = await new web3.eth.Contract(abi, contractAddress);
+//             await newContract && newContract.methods.getpurchaseableTokensAddress().call().then(async out3 => {
+//                 await newContract.methods.balanceOf(out3.toString()).call().then(async out4 => {
+//                     await newContract.methods.getTotalETH().call().then(async out1 => {
+//                         await newContract.methods.getPriceToken().call().then(async out2 => {
+//                             var transformTokens = new TransformTokens();
+//                             transformTokens.Day = indexDate;
+//                             transformTokens.NEXONAvailable = (parseInt(out4) / 1000000000000000000).toFixed(6);
+//                             transformTokens.TotalETH = (parseInt(out1) / 1000000000000000000).toFixed(6);
+//                             transformTokens.NEXONETH = parseInt(out2);
+//                             transformTokens.Closing = 0;
+//                             transformTokens.YourNEXON = 0;
+//                             transformTokens.YourETH = 0;
+//                             await transformTokens.save({ Day: indexDate }, (err, doc) => {
+//                                 if (!err) {
+//                                     startUpdatesIndex = 0;
+//                                     console.log({ response: 'update successful for transform cron!!' });
+//                                 }
+//                                 else {
+//                                     console.log({ error: 'Error during Json insertion insertion : ' + err });
+//                                 }
+//                             });
+//                         });
+//                     });
+//                 });
+//             });
+//         });
+// });
 
 module.exports = {
 
@@ -500,6 +563,32 @@ module.exports = {
             console.log(err)
         }
     },
+    getClaimsByUserAddress: async (req, res) => {
+        var newContract = await new web3.eth.Contract(abi, contractAddress);
+        await newContract && newContract.methods.getRewardPercentage().call().then(async output => {
+            let obj = [];
+            NexDatabase.find({ StakerAddress: req.query.address }, (err, docs) => {
+                if (!err) {
+                    docs.forEach(element => {
+                        console.log(element.TokenTransactionstatus)
+                        //if (element.TokenTransactionstatus == 'false') {
+                            element.Interest = (parseFloat(output) / 100).toFixed(6);
+                            // element.Amount = (((parseInt(element.StakerTokens) * output )/10000) * Math.floor((parseInt(element.StakingEndTime) - Math.floor(new Date() / 1000))/86400)).toFixed(6)
+                            // if (element.StakingEndTime / 86400 > Date.now() / 86400000)
+                            //     element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - Date.now() / 1000) / 86400).toFixed(6);
+                            // else
+                                element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+                            obj.push(element)
+                        //}
+                    });
+                    res.send(obj);
+                }
+                else {
+                    //console.log({error :'Error in getting details :' + err});
+                }
+            });
+        });
+    },
 
     getStakeDetails: async (req, res) => {
         console.log(Math.floor(parseFloat(req.query.endTime)));
@@ -531,6 +620,30 @@ module.exports = {
         else {
             res.send("err")
         }
+    },
+
+    checkNowStakesBalance: async (req, res) => {
+        console.log(req.query.address)
+        var newContract = await new web3.eth.Contract(abi, contractAddress);
+        await newContract && newContract.methods.checkNowStakesBalance(req.query.address).call().then(async output => {
+            let response = { status: true, amount: output.toString() };
+            res.send(response);
+        }).catch(err => {
+            let response = { status: false, message: "Unable to get Stakes Balance for hex, Try Again!!!" };
+            res.send(response);
+        });
+    },
+
+    checkHoldingBalance: async (req, res) => {
+        console.log(req.query.address)
+        var newContract = await new web3.eth.Contract(abi, contractAddress);
+        await newContract && newContract.methods.checkHoldingBalance(req.query.address).call().then(async output => {
+            let response = { status: true, amount: output.toString() };
+            res.send(response);
+        }).catch(err => {
+            let response = { status: false, message: "Unable to get Holding Balance for hex, Try Again!!!" };
+            res.send(response);
+        });
     },
 
 

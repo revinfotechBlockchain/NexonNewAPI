@@ -12,3 +12,4 @@ require('./ReferalManager');
 require('./UserAddressAndStakeID');
 require('./TransformTokens');
 require('./BTCDatabase');
+require('./NexDatabase');

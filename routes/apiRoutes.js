@@ -902,6 +902,18 @@ router.post('/withdrawReferral', contractApi.withdrawReferral);
     */
    router.get('/getStakeHistoryByUserAddress', BackendAPI.getStakeHistoryByUserAddress);
 
+   /**
+    * @typedef getClaimsByUserAddress
+    * @property {String} address.required - Add address - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw
+    */
+    /**
+    * @route GET /api/eth/nexon/getClaimsByUserAddress
+    * @param {getClaimsByUserAddress.model} address.query
+    * @group Frontend_API
+    * @security Basic Auth
+    */
+   router.get('/getClaimsByUserAddress', BackendAPI.getClaimsByUserAddress);
+
     /**
     * @typedef getAllTransformTableDataByAddress
     * @property {String} address.required - Add address - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw
@@ -913,6 +925,45 @@ router.post('/withdrawReferral', contractApi.withdrawReferral);
     * @security Basic Auth
     */
    router.get('/getAllTransformTableDataByAddress', BackendAPI.getAllTransformTableDataByAddress);
+
+
+   /**
+    * @typedef checkNowStakesBalance
+    * @property {String} address.required - Add address - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw
+    */
+    /**
+    * @route GET /api/eth/nexon/checkNowStakesBalance
+    * @param {checkNowStakesBalance.model} address.query
+    * @group Frontend_API
+    * @security Basic Auth
+    */
+   router.get('/checkNowStakesBalance', BackendAPI.checkNowStakesBalance);
+
+   /**
+    * @typedef checkHoldingBalance
+    * @property {String} address.required - Add address - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw
+    */
+    /**
+    * @route GET /api/eth/nexon/checkHoldingBalance
+    * @param {checkHoldingBalance.model} address.query
+    * @group Frontend_API
+    * @security Basic Auth
+    */
+   router.get('/checkHoldingBalance', BackendAPI.checkHoldingBalance);
+
+//    /**
+//     * @typedef whitelistaddressForClaim
+//     * @property {Array} addressWhiteList.required - Add addressList - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw
+//     * @property {Array} snapshotBalance.required - Add balanceList - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw
+//     * 
+//     */
+//     /**
+//     * @route POST /api/eth/nexon/whitelistaddressForClaim
+//     * @param {whitelistaddressForClaim.model} req.body
+//     * @group Frontend_API
+//     * @security Basic Auth
+//     */
+//    router.post('/whitelistaddressForClaim', BackendAPI.whitelistaddressForClaim);
 
     /**
     * @typedef DeleteTransformTable
