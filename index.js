@@ -8,6 +8,7 @@ var app = express();
 var route = require('./routes/apiRoutes');
 var verifyRequest = require('./routes/auth');
 var mongoose = require('mongoose');
+var cors = require('cors');
 var DB = 'mongodb://localhost:27017';
 
 app.use(verifyRequest());
@@ -19,6 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/eth/nexon', route);
+app.use(cors());
+app.options('*', cors());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
