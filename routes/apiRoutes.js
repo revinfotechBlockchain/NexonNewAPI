@@ -602,18 +602,18 @@ router.post('/withdrawStakingToken', contractApi.withdrawStakingToken);
 router.post('/withdrawPurchasedToken', contractApi.withdrawPurchasedToken);
 
     /**
-    * @typedef withdrawReferral
+    * @typedef withdrawReferralWithPvtKey
     * @property {String} privateKey.required - Add privateKey - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw
     * @property {String} fromAddress.required - Add fromAddress - eg: asdfghjkhgdsasfhjk
     * @property {String} address.required - Add address - eg: asdfghjkhgdsasfhjk
     */
     /**
-    * @route POST /api/eth/nexon/withdrawReferral
-    * @param {withdrawReferral.model} req.body
+    * @route POST /api/eth/nexon/withdrawReferralWithPvtKey
+    * @param {withdrawReferralWithPvtKey.model} req.body
     * @group Nexon_API
     * @security Basic Auth
     */
-router.post('/withdrawReferral', contractApi.withdrawReferral);
+router.post('/withdrawReferralWithPvtKey', contractApi.withdrawReferral);
 
 
 /////////////////////////////////////////////////BACKEND-API///////////////////////////////////////////////////////////
@@ -865,6 +865,16 @@ router.post('/withdrawReferral', contractApi.withdrawReferral);
     * @security Basic Auth
     */
    router.get('/getAllStakesById', BackendAPI.getAllStakesById);
+
+   /**
+    * @typedef getAllStakesCount
+    */
+    /**
+    * @route GET /api/eth/nexon/getAllStakesCount
+    * @group Frontend_API
+    * @security Basic Auth
+    */
+   router.get('/getAllStakesCount', BackendAPI.getAllStakesCount);
    
     /**
     * @typedef deleteRecordByStakeId

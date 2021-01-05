@@ -20,6 +20,33 @@ const TransformTokens = mongoose.model('TransformTokens');
 const referalManager = mongoose.model('ReferalManager');
 const NexDatabase = mongoose.model('NexDatabase');
 
+const funct = {
+    async getTotalStakedAmount (){
+        let totalStakeAmount = 0;
+        try{
+            await UserAddressAndStakeID.find({}, (err, docs) => {
+                if (!err) {
+                    docs.forEach(element => {
+                        console.log(element.TokenTransactionstatus)
+                        
+                        totalStakeAmount=totalStakeAmount + parseFloat(element.StakerTokens)
+                    });
+                }
+                else {
+                    //console.log({error :'Error in getting details :' + err});
+                    totalStakeAmount = 0
+                }
+            });
+        }
+        catch(err){
+            console.log("Error: ", err);
+            return 0;
+        }
+
+        return totalStakeAmount;
+    }
+}
+
 //Modules exporter
 
 // cron.schedule('30 * * * * *', async () => {
@@ -236,34 +263,36 @@ module.exports = {
         });
     },
     getTokenTransactionsByAddress: async (req, res) => {
+        var newContract = await new web3.eth.Contract(abi,contractAddress);
+        var ourTokenSymbol = await newContract.methods.symbol().call();
         var returnData = [];
         if (req.query.address && !req.query.address == "") {
-            axios.get('http://api-ropsten.etherscan.io/api?module=account&action=tokentx&address=' + req.query.address + '&startblock=0&endblock=999999999&sort=asc&apikey=YourApiKeyToken').then(output => {
+            axios.get('http://api-ropsten.etherscan.io/api?module=account&action=tokentx&address=' + req.query.address + '&startblock=0&endblock=999999999&sort=asc&apikey=USNTIVWHFS61PXX3NA4ZGJ4EE7ITT2SHDU').then(output => {
                 // console.log(output.data)
                 var out = output.data.result;
                 // res.send(out)
                 var dataArray = [];
-                //out.forEach(element => {
-                // if(element.tokenSymbol == "EXC"){
-                // var final =   {
-                // from:element.from,
-                // address:element.to,
-                // day:element.timeStamp,
-                //amount:(element.value/1000000000000000000).toFixed(20),
-                //type:"Transfer",
-                // txid:element.hash
-                // }
-                //  dataArray.push(final)    
-                // }
-                // });
-                dataArray = [{
-                    from: '0xDA8e0A7e294e902446CA352CCB7B08e3E2E8F3EA',
-                    address: '0xDA8e0A7e294e902446C5332CCB7B08e3E2E8F3EA',
-                    day: 1602055327,
-                    amount: 1000000000000000000,
-                    type: "Transfer",
-                    txid: '0xDA8e0A7e294e902446CA335CCB7B08e3E2E8F3EA'
-                }]
+                out.forEach(element => {
+                if(element.tokenSymbol == ourTokenSymbol){
+                var final =   {
+                from:element.from,
+                address:element.to,
+                day:element.timeStamp,
+                amount:(element.value/1000000000000000000).toFixed(20),
+                type:"Transfer",
+                txid:element.hash
+                }
+                 dataArray.push(final)    
+                }
+                });
+                // dataArray = [{
+                //     from: '0xDA8e0A7e294e902446CA352CCB7B08e3E2E8F3EA',
+                //     address: '0xDA8e0A7e294e902446C5332CCB7B08e3E2E8F3EA',
+                //     day: 1602055327,
+                //     amount: 1000000000000000000,
+                //     type: "Transfer",
+                //     txid: '0xDA8e0A7e294e902446CA335CCB7B08e3E2E8F3EA'
+                // }]
                 res.send({ status: true, address: req.query.address, data: dataArray })
             }).catch(err => {
                 let response = { status: false, message: "Unable to get Transaction Details, Try Again!!!" };
@@ -418,7 +447,7 @@ module.exports = {
                                     Date: data.Date,
                                     UsedAddress: req.body.address,
                                     ReferalCode: data.ReferalCode,
-                                    Amount: "10",
+                                    Amount: amnt,
                                     Details: 'Used',
                                 }, function (err, resp) {
                                     if (!err) {
@@ -483,6 +512,31 @@ module.exports = {
             }
         });
     },
+    getAllStakesCount: async (req, res) => {
+        let obj = [];
+        let i=0,j=0;
+        UserAddressAndStakeID.find((err, docs) => {
+            if (!err) {
+                docs.forEach(element => {
+                    console.log(element.TokenTransactionstatus)
+                    if (element.TokenTransactionstatus == 'false') {
+                        i++;
+                    } else {
+                        j++;
+                    }
+                });
+                return res.status(200).json({
+                    success:true,
+                    totalActiveStakes: i,
+                    totalStakesHistory: j,
+                    totalUsersStakes: i+j
+                })
+            }
+            else {
+                //console.log({error :'Error in getting details :' + err});
+            }
+        });
+    },
     deleteRecordByStakeId: async (req, res) => {
         UserAddressAndStakeID.remove((err, doc) => {
             if (!err) { res.send({ response: 'Deleted Successful' }); }
@@ -493,15 +547,20 @@ module.exports = {
     },
 
     getActiveStakesByUserAddress: async (req, res) => {
+        let totalStakeAmount = await funct.getTotalStakedAmount();
         var newContract = await new web3.eth.Contract(abi, contractAddress);
         await newContract && newContract.methods.getRewardPercentage().call().then(async output => {
             let obj = [];
+            let i =0;
             UserAddressAndStakeID.find({ StakerAddress: req.query.address }, (err, docs) => {
                 if (!err) {
                     docs.forEach(element => {
                         console.log(element.TokenTransactionstatus)
                         if (element.TokenTransactionstatus == 'false') {
-                            element.Interest = (parseFloat(output) / 100).toFixed(6);
+                            i++;
+                            //element.Interest = (parseFloat(output) / 100).toFixed(6);
+                            element.Shares = (parseFloat(element.StakerTokens)*100/parseFloat(totalStakeAmount)).toFixed(6);
+                            element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
                             // element.Amount = (((parseInt(element.StakerTokens) * output )/10000) * Math.floor((parseInt(element.StakingEndTime) - Math.floor(new Date() / 1000))/86400)).toFixed(6)
                             if (element.StakingEndTime / 86400 > Date.now() / 86400000)
                                 element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - Date.now() / 1000) / 86400).toFixed(6);
@@ -510,10 +569,19 @@ module.exports = {
                             obj.push(element)
                         }
                     });
-                    res.send(obj);
+                    //let totalActiveStakes = i;
+                    return res.status(200).json({
+                        success:true,
+                        obj: obj,
+                        totalActiveStakes: i
+                    })
                 }
                 else {
                     //console.log({error :'Error in getting details :' + err});
+                    return res.status(200).json({
+                        success:false,
+                        obj: err
+                        })
                 }
             });
         });
@@ -521,16 +589,23 @@ module.exports = {
 
     getStakeHistoryByUserAddress: async (req, res) => {
         try {
+            console.log("hehehoo")
+            let totalStakeAmount = await funct.getTotalStakedAmount();
             var newContract = await new web3.eth.Contract(abi, contractAddress);
             await newContract && newContract.methods.getRewardPercentage().call().then(async output => {
                 UserAddressAndStakeID.find({ StakerAddress: req.query.address }, async (err, docs) => {
+                    console.log("docs: ", docs)
                     if (!err) {
                         let obj = [];
                         var itx = 0;
+                        let i = 0;
                         docs.forEach(async element => {
+                            console.log("new docs new ")
                             if (element.TokenTransactionstatus != 'false') {
+                                i++;
                                 newContract && newContract.methods.getFinalWithdrawlStake(element.StakeId).call().then(async out2 => {
-                                    element.Interest = output.toString() / 100;
+                                    element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+                                    element.Shares = (parseFloat(element.StakerTokens)*100/parseFloat(totalStakeAmount)).toFixed(6);
                                     element.Amount = out2.toString() / 1000000000000000000;
                                     //   element.Amount = (parseFloat(element.StakerTokens) + ((element.StakerTokens * output)/10000) * (element.StakingEndTime - element.StakingStartTime)/86400).toFixed(6);
                                     //   element.Amount = (element.StakerTokens * output.toString()/100 * (element.StakingEndTime - element.StakingStartTime)/86400).toFixed(6);
@@ -538,10 +613,11 @@ module.exports = {
                                     obj.push(element);
                                     console.log(obj)
                                     console.log(docs.length, parseInt(itx) + 1)
-                                    if (docs.length == parseInt(itx) + 1) {
-                                        // console.log(obj)
-                                        res.send(obj);
-                                    }
+                                    // if (docs.length == parseInt(itx) + 1) {
+                                    //     // console.log(obj)
+
+                                    //     res.send(obj);
+                                    // }
                                     itx = parseInt(itx) + 1;
                                 }).catch(err => {
                                     console.log(err)
@@ -551,9 +627,20 @@ module.exports = {
                                 itx = parseInt(itx) + 1;
                             }
                         });
+
+                        return res.status(200).json({
+                        success:true,
+                        obj: obj,
+                        totalStakesHistory: i
+                        })
+                        
                     }
                     else {
                         console.log({ error: 'Error in getting details :' + err });
+                        return res.status(200).json({
+                            success:false,
+                            obj: err
+                            })
                     }
                 });
                 // 
@@ -561,6 +648,10 @@ module.exports = {
         }
         catch (err) {
             console.log(err)
+            return res.status(200).json({
+                success:false,
+                obj: err
+                })
         }
     },
     getClaimsByUserAddress: async (req, res) => {
@@ -589,25 +680,28 @@ module.exports = {
             });
         });
     },
+    
+
 
     getStakeDetails: async (req, res) => {
         console.log(Math.floor(parseFloat(req.query.endTime)));
         console.log(Math.floor((Math.floor(req.query.endTime) - Math.floor(new Date() / 1000)) / 86400))
         let now = 0;
+        let totalStakeAmount = await funct.getTotalStakedAmount();
         if (req.query.endTime != "", req.query.amount != "") {
             await TransformTokens.find().sort({ Day: -1 }).limit(1).then(
                 async function (doc) {
                     if (doc != '') {
                         var now = parseInt(doc[0].Day);
                         var newContract = await new web3.eth.Contract(abi, contractAddress);
-                        await newContract && newContract.methods.calculateBigPayDayReward(req.query.amount, Math.floor((req.query.endTime))).call().then(async output => {
+                        await newContract && newContract.methods.calculateBigPayDayReward((req.query.amount*1000000000000000000).toString(), Math.floor((req.query.endTime))).call().then(async output => {
                             await newContract.methods.getRewardPercentage().call().then(async out1 => {
                                 console.log("This is output", parseFloat(output));
                                 let stakeBonus = (((parseFloat(req.query.amount) * out1) / 10000).toFixed(6) * Math.floor((Math.floor(req.query.endTime) - Math.floor(new Date() / 1000)) / 86400)).toFixed(6);
                                 let amountAfterStake = (parseFloat(req.query.amount) + parseFloat(stakeBonus)).toFixed(6);
-                                let bigPayDay = (parseFloat(output)).toFixed(6);
-                                let stakeShares = (parseFloat(req.query.amount) * 95.001).toFixed(6);
-                                let stakeRate = 2444000000;
+                                let bigPayDay = (parseFloat(output)/1000000000000000000).toFixed(6);
+                                let stakeShares = (parseFloat(req.query.amount)/parseFloat(totalStakeAmount) * 100).toFixed(6);
+                                let stakeRate = totalStakeAmount;
                                 let startDay = now;
                                 let lastDay = now + Math.floor((Math.floor(req.query.endTime) - Math.floor(new Date() / 1000)) / 86400);
                                 let endDay = lastDay + 1;
@@ -734,26 +828,26 @@ module.exports = {
 
 
 
-    //API for Stakes and addresses
-    getAllStakesById: async (req, res) => {
-        let obj = [];
-        UserAddressAndStakeID.find((err, docs) => {
-            if (!err) {
-                res.send(docs);
-            }
-            else {
-                //console.log({error :'Error in getting details :' + err});
-            }
-        });
-    },
-    deleteRecordByStakeId: async (req, res) => {
-        UserAddressAndStakeID.remove((err, doc) => {
-            if (!err) { res.send({ response: 'Deleted Successful' }); }
-            else {
-                //console.log({error :'Error during record update : ' + err});
-            }
-        })
-    },
+    // //API for Stakes and addresses
+    // getAllStakesById: async (req, res) => {
+    //     let obj = [];
+    //     UserAddressAndStakeID.find((err, docs) => {
+    //         if (!err) {
+    //             res.send(docs);
+    //         }
+    //         else {
+    //             //console.log({error :'Error in getting details :' + err});
+    //         }
+    //     });
+    // },
+    // deleteRecordByStakeId: async (req, res) => {
+    //     UserAddressAndStakeID.remove((err, doc) => {
+    //         if (!err) { res.send({ response: 'Deleted Successful' }); }
+    //         else {
+    //             //console.log({error :'Error during record update : ' + err});
+    //         }
+    //     })
+    // },
 
     //BTC Claim Functions
     checkBTCAddress: async (req, res) => {
