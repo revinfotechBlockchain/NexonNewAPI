@@ -269,13 +269,12 @@ module.exports = {
         var returnData = [];
         if (req.query.address && !req.query.address == "") {
             axios.get('http://'+etherscanEndPoint+'/api?module=account&action=tokentx&address=' + req.query.address + '&startblock=0&endblock=999999999&sort=asc&apikey=USNTIVWHFS61PXX3NA4ZGJ4EE7ITT2SHDU').then(output => {
-                console.log(output.data)
+                //console.log(output.data)
                 var out = output.data.result;
                 // res.send(out)
                 var dataArray = [];
                 out.forEach(element => {
                 if(element.contractAddress == contractAddress){
-                    console.log("my ele: ", element)
                     if(web3.utils.toChecksumAddress(element.from) == req.query.address){
                         var final =   {
                             from:element.from,
