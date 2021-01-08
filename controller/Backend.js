@@ -825,7 +825,7 @@ module.exports = {
             var newContract = await new web3.eth.Contract(abi, contractAddress);
             await newContract && newContract.methods.getMyPurchasedTokens(req.query.address).call().then(async output => {
                 console.log(output)
-                await newContract.methods.getpurchaseableTokensAddress().call().then(async out2 => {
+                await newContract.methods.getowner().call().then(async out2 => {
                     console.log(out2)
                     await newContract.methods.balanceOf(out2.toString()).call().then(async out3 => {
                         console.log(out3)
