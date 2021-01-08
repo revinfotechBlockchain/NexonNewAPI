@@ -275,15 +275,39 @@ module.exports = {
                 var dataArray = [];
                 out.forEach(element => {
                 if(element.contractAddress == contractAddress){
-                var final =   {
-                from:element.from,
-                address:element.to,
-                day:element.timeStamp,
-                amount:(element.value/1000000000000000000).toFixed(20),
-                type:"Transfer",
-                txid:element.hash
-                }
-                 dataArray.push(final)    
+                    console.log("my ele: ", element)
+                    if(web3.utils.toChecksumAddress(element.from) == req.query.address){
+                        var final =   {
+                            from:element.from,
+                            address:element.to,
+                            day:element.timeStamp,
+                            amount:(element.value/1000000000000000000).toFixed(20),
+                            type:"Transfer",
+                            txid:element.hash
+                            }
+                             dataArray.push(final)   
+                    } else if(web3.utils.toChecksumAddress(element.to) == req.query.address) {
+                        var final =   {
+                            from:element.from,
+                            address:element.to,
+                            day:element.timeStamp,
+                            amount:(element.value/1000000000000000000).toFixed(20),
+                            type:"Recieve",
+                            txid:element.hash
+                            }
+                             dataArray.push(final)   
+                    } else {
+                        var final =   {
+                            from:element.from,
+                            address:element.to,
+                            day:element.timeStamp,
+                            amount:(element.value/1000000000000000000).toFixed(20),
+                            type:"Unknown",
+                            txid:element.hash
+                            }
+                             dataArray.push(final)   
+                    }
+                 
                 }
                 });
                 // dataArray = [{
