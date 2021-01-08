@@ -7,6 +7,7 @@ var cron = require('node-cron');
 const httpEndPoint = config.connectionURL;
 var web3 = new Web3(new Web3.providers.HttpProvider(httpEndPoint));
 const contractAddress = config.contractAddress;
+const etherscanEndPoint = config.etherscanEndPoint;
 const abi = require('../controller/abi.json');
 const axios = require('axios');
 const mongoose = require('mongoose');
@@ -264,16 +265,16 @@ module.exports = {
     },
     getTokenTransactionsByAddress: async (req, res) => {
         var newContract = await new web3.eth.Contract(abi,contractAddress);
-        var ourTokenSymbol = await newContract.methods.symbol().call();
+        //var ourTokenSymbol = await newContract.methods.symbol().call();
         var returnData = [];
         if (req.query.address && !req.query.address == "") {
-            axios.get('http://api-ropsten.etherscan.io/api?module=account&action=tokentx&address=' + req.query.address + '&startblock=0&endblock=999999999&sort=asc&apikey=USNTIVWHFS61PXX3NA4ZGJ4EE7ITT2SHDU').then(output => {
-                // console.log(output.data)
+            axios.get('http://'+etherscanEndPoint+'/api?module=account&action=tokentx&address=' + req.query.address + '&startblock=0&endblock=999999999&sort=asc&apikey=USNTIVWHFS61PXX3NA4ZGJ4EE7ITT2SHDU').then(output => {
+                console.log(output.data)
                 var out = output.data.result;
                 // res.send(out)
                 var dataArray = [];
                 out.forEach(element => {
-                if(element.tokenSymbol == ourTokenSymbol){
+                if(element.contractAddress == contractAddress){
                 var final =   {
                 from:element.from,
                 address:element.to,
