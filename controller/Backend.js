@@ -514,26 +514,38 @@ module.exports = {
     },
     getAllStakesCount: async (req, res) => {
         let obj = [];
-        let i=0,j=0;
+        let i=0,j=0, totalStakeAmount=0, totalUnstakeAmount=0;
         UserAddressAndStakeID.find((err, docs) => {
             if (!err) {
                 docs.forEach(element => {
                     console.log(element.TokenTransactionstatus)
                     if (element.TokenTransactionstatus == 'false') {
                         i++;
+                        if(element.StakingStartTime>Date.now()/1000 - 604800){
+                            totalStakeAmount+=element.StakerTokens;
+                        }
                     } else {
                         j++;
+                        if(element.StakingEndTime>Date.now()/1000 - 604800){
+                            totalUnstakeAmount+=element.StakerTokens;
+                        }
                     }
                 });
                 return res.status(200).json({
                     success:true,
                     totalActiveStakes: i,
                     totalStakesHistory: j,
-                    totalUsersStakes: i+j
+                    totalUsersStakes: i+j,
+                    totalStakeAmountWeekly: totalStakeAmount,
+                    totalUnstakeAmountWeekly: totalUnstakeAmount
                 })
             }
             else {
-                //console.log({error :'Error in getting details :' + err});
+                console.log({error :'Error in getting details :' + err});
+                return res.status(200).json({
+                    error:true,
+                    message: err
+                })
             }
         });
     },
@@ -663,7 +675,8 @@ module.exports = {
                     docs.forEach(element => {
                         console.log(element.TokenTransactionstatus)
                         //if (element.TokenTransactionstatus == 'false') {
-                            element.Interest = (parseFloat(output) / 100).toFixed(6);
+                            element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+
                             // element.Amount = (((parseInt(element.StakerTokens) * output )/10000) * Math.floor((parseInt(element.StakingEndTime) - Math.floor(new Date() / 1000))/86400)).toFixed(6)
                             // if (element.StakingEndTime / 86400 > Date.now() / 86400000)
                             //     element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - Date.now() / 1000) / 86400).toFixed(6);
