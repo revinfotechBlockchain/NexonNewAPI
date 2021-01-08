@@ -876,6 +876,16 @@ router.post('/withdrawReferralWithPvtKey', contractApi.withdrawReferral);
     */
    router.get('/getAllStakesCount', BackendAPI.getAllStakesCount);
    
+      /**
+    * @typedef getTradingVolume
+    */
+    /**
+    * @route GET /api/eth/nexon/getTradingVolume
+    * @group Frontend_API
+    * @security Basic Auth
+    */
+   router.get('/getTradingVolume', BackendAPI.getTradingVolume);
+   
     /**
     * @typedef deleteRecordByStakeId
     * @property {String} id.required - Add id - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw

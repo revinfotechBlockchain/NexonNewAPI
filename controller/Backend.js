@@ -549,6 +549,30 @@ module.exports = {
             }
         });
     },
+    getTradingVolume: async (req, res) => {
+        try{
+            let dailyOutput =await axios.get('https://api.coingecko.com/api/v3/coins/ethereum/contract/'+contractAddress+'/market_chart/?vs_currency=usd&days=1')
+            let weeklyOutput =await axios.get('https://api.coingecko.com/api/v3/coins/ethereum/contract/'+contractAddress+'/market_chart/?vs_currency=usd&days=7')
+            let fullOutput =await axios.get('https://api.coingecko.com/api/v3/coins/ethereum/contract/'+contractAddress+'/market_chart/?vs_currency=usd&days=30')
+            //console.log(output.data.total_volumes[0][1]);
+                res.status(200).json({
+                    tradeVolumeDaily: dailyOutput.data.total_volumes[0][1],
+                    tradeVolumeMonthly: weeklyOutput.data.total_volumes[0][1],
+                    tradeVolumeFull: fullOutput.data.total_volumes[0][1]
+                });
+
+        } catch (error) {
+            console.log(error, "error in getTradingVolume");
+            res.status(200).json({
+                success: false,
+                message: error.toString(),
+                reason: 'Could not find coin with the given id',
+                tradeVolumeDaily: 0,
+                tradeVolumeMonthly: 0,
+                tradeVolumeFull: 0
+            })
+        }
+    },
     deleteRecordByStakeId: async (req, res) => {
         UserAddressAndStakeID.remove((err, doc) => {
             if (!err) { res.send({ response: 'Deleted Successful' }); }
