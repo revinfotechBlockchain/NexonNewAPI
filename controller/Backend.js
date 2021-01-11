@@ -266,16 +266,18 @@ module.exports = {
     getTokenTransactionsByAddress: async (req, res) => {
         var newContract = await new web3.eth.Contract(abi,contractAddress);
         //var ourTokenSymbol = await newContract.methods.symbol().call();
+        console.log("eee", etherscanEndPoint)
+        let queryAddress = web3.utils.toChecksumAddress(req.query.address);
         var returnData = [];
-        if (req.query.address && !req.query.address == "") {
-            axios.get('http://'+etherscanEndPoint+'/api?module=account&action=tokentx&address=' + req.query.address + '&startblock=0&endblock=999999999&sort=asc&apikey=USNTIVWHFS61PXX3NA4ZGJ4EE7ITT2SHDU').then(output => {
+        if (queryAddress && !queryAddress == "") {
+            axios.get('http://'+etherscanEndPoint+'/api?module=account&action=tokentx&address=' + queryAddress + '&startblock=0&endblock=999999999&sort=asc&apikey=USNTIVWHFS61PXX3NA4ZGJ4EE7ITT2SHDU').then(output => {
                 //console.log(output.data)
                 var out = output.data.result;
                 // res.send(out)
                 var dataArray = [];
                 out.forEach(element => {
-                if(element.contractAddress == contractAddress){
-                    if(web3.utils.toChecksumAddress(element.from) == req.query.address){
+                if(web3.utils.toChecksumAddress(element.contractAddress) == web3.utils.toChecksumAddress(contractAddress)){
+                    if(web3.utils.toChecksumAddress(element.from) == queryAddress){
                         var final =   {
                             from:element.from,
                             address:element.to,
@@ -285,7 +287,7 @@ module.exports = {
                             txid:element.hash
                             }
                              dataArray.push(final)   
-                    } else if(web3.utils.toChecksumAddress(element.to) == req.query.address) {
+                    } else if(web3.utils.toChecksumAddress(element.to) == queryAddress) {
                         var final =   {
                             from:element.from,
                             address:element.to,
@@ -317,7 +319,7 @@ module.exports = {
                 //     type: "Transfer",
                 //     txid: '0xDA8e0A7e294e902446CA335CCB7B08e3E2E8F3EA'
                 // }]
-                res.send({ status: true, address: req.query.address, data: dataArray })
+                res.send({ status: true, address: queryAddress, data: dataArray })
             }).catch(err => {
                 let response = { status: false, message: "Unable to get Transaction Details, Try Again!!!" };
                 res.send(response);
