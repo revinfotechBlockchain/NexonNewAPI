@@ -546,12 +546,12 @@ module.exports = {
                     if (element.TokenTransactionstatus == 'false') {
                         i++;
                         if(element.StakingStartTime>Date.now()/1000 - 604800){
-                            totalStakeAmount+=element.StakerTokens;
+                            totalStakeAmount=totalStakeAmount+element.StakerTokens;
                         }
                     } else {
                         j++;
                         if(element.StakingEndTime>Date.now()/1000 - 604800){
-                            totalUnstakeAmount+=element.StakerTokens;
+                            totalUnstakeAmount=totalUnstakeAmount+element.StakerTokens;
                         }
                     }
                 });
