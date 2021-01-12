@@ -466,14 +466,14 @@ module.exports = {
                         console.log("Here you are1")
                         var newContract = await new web3.eth.Contract(abi, contractAddress);
                         if (addr && !addr == "") {
-                            await newContract && newContract.methods.getReferralAmount().call().then(async amnt => {
+                           // await newContract && newContract.methods.getReferralAmount().call().then(async amnt => {
                                 referalManager.updateOne(query, {
                                     UserAddress: data.UserAddress,
                                     Used: true,
                                     Date: data.Date,
                                     UsedAddress: req.body.address,
                                     ReferalCode: data.ReferalCode,
-                                    Amount: amnt,
+                                    Amount: 0,
                                     Details: 'Used',
                                 }, function (err, resp) {
                                     if (!err) {
@@ -490,11 +490,11 @@ module.exports = {
                                     }
                                 });
 
-                            }).catch(err => {
-                                let response = { status: false, message: "Unable to Withdraw Referral Amount, Please Try Again!!!" };
-                                console.log(response, err)
-                                res.send(response);
-                            });
+                            // }).catch(err => {
+                            //     let response = { status: false, message: "Unable to Withdraw Referral Amount, Please Try Again!!!" };
+                            //     console.log(response, err)
+                            //     res.send(response);
+                            // });
                         } else {
                             let response = { status: false, message: "Invalid or Expired Referral Code!!!" };
                             console.log(response)
