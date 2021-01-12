@@ -751,6 +751,9 @@ module.exports = {
         console.log(Math.floor((Math.floor(req.query.endTime) - Math.floor(new Date() / 1000)) / 86400))
         let now = 0;
         let totalStakeAmount = await funct.getTotalStakedAmount();
+        if(totalStakeAmount == 0){
+            totalStakeAmount = req.query.amount;
+        }
         if (req.query.endTime != "", req.query.amount != "") {
             await TransformTokens.find().sort({ Day: -1 }).limit(1).then(
                 async function (doc) {
@@ -763,7 +766,7 @@ module.exports = {
                                 let stakeBonus = (((parseFloat(req.query.amount) * out1) / 10000).toFixed(6) * Math.floor((Math.floor(req.query.endTime) - Math.floor(new Date() / 1000)) / 86400)).toFixed(6);
                                 let amountAfterStake = (parseFloat(req.query.amount) + parseFloat(stakeBonus)).toFixed(6);
                                 let bigPayDay = (parseFloat(output)/1000000000000000000).toFixed(6);
-                                let stakeShares = (parseFloat(req.query.amount)/parseFloat(totalStakeAmount) * 100).toFixed(6);
+                                let stakeShares = (parseFloat(req.query.amount)*100/parseFloat(totalStakeAmount)).toFixed(6);
                                 let stakeRate = totalStakeAmount;
                                 let startDay = now;
                                 let lastDay = now + Math.floor((Math.floor(req.query.endTime) - Math.floor(new Date() / 1000)) / 86400);
