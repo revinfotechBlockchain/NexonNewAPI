@@ -844,6 +844,19 @@ router.post('/withdrawReferralWithPvtKey', contractApi.withdrawReferral);
     */
     router.post('/withdrawReferral', BackendAPI.withdrawReferral);
 
+        /**
+    * @typedef updateReferralAmount
+    * @property {String} address.required - Add address - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw
+    * @property {String} amount.required - Add referralLink - eg: 100
+    */
+    /**
+    * @route POST /api/eth/nexon/updateReferralAmount
+    * @param {updateReferralAmount.model} req.body
+    * @group Frontend_API
+    * @security Basic Auth
+    */
+   router.post('/updateReferralAmount', BackendAPI.updateReferralAmount);
+
     /**
     * @typedef deleteRecord
     * @property {String} address.required - Add address - eg: XdAUmwtig27HBG6WfYyHAzP8n6XC9jESEw

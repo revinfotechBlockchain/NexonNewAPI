@@ -514,6 +514,51 @@ module.exports = {
         }
     },
 
+    updateReferralAmount: async (req, res) => {
+        try{
+        let address = req.body.address;
+        let amount = req.body.amount;
+        if(!address || address=="" || !amount || amount==""){
+            return res.status(200).json({
+                error: "true",
+                message: "Vody not found"
+            })
+        }
+
+        var query = { UsedAddress: address }
+        referalManager.findOne(query).then(async data => {
+            if (!data) {
+                res.send({ status: false, response: "User Not referred" });
+            }
+            else{
+                console.log("Here you are1")
+
+                        referalManager.updateOne(query, {
+
+                            Amount: parseFloat(amount/5)
+                        }, function (err, resp) {
+                            if (!err) {
+                                let response = { status: true, message: "Referral amount updated" };
+                                console.log(response)
+                                res.send(response);
+                                console.log("1 document updated");
+                            }
+                            else {
+                                console.log(err)
+                                let response = { status: false, message: "Invalid or Expired! Referral Code Not Found!!!" };
+                                console.log(response)
+                                res.send(response);
+                            }
+                        });
+            }
+        })
+    }catch (err) {
+        console.log(err)
+        res.send({ status: false, response: "Invalid or Expired Referral!!!" })
+    }
+
+    },
+
     deleteRecord: async (req, res) => {
         referalManager.remove((err, doc) => {
             if (!err) { res.send({ response: 'Deleted Successful' }); }
