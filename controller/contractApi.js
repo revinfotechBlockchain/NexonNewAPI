@@ -100,7 +100,7 @@ approveToken: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -138,7 +138,7 @@ transferToken: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -176,7 +176,7 @@ transferFrom: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -215,7 +215,7 @@ burnToken: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -254,7 +254,7 @@ mintToken: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -293,7 +293,7 @@ transferOwnership: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -571,7 +571,7 @@ setBigPayDay: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -610,7 +610,7 @@ setBigPayDayPercentage: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -649,7 +649,7 @@ setTokenPoolAddress: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -688,7 +688,7 @@ setpurchaseableTokenAddress: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -727,7 +727,7 @@ setPriceOfToken: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -766,7 +766,7 @@ setRewardPercentage: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -805,7 +805,7 @@ setPenaltyPercentage: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -844,7 +844,7 @@ setReferralAddress: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -883,7 +883,7 @@ setReferralAmount: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -922,7 +922,7 @@ setClaimTokens: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -961,7 +961,7 @@ performStakingToken: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -1000,7 +1000,7 @@ withdrawStakingToken: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -1039,7 +1039,7 @@ withdrawPurchasedToken: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
@@ -1078,7 +1078,7 @@ withdrawReferral: async (req, res) => {
     };
 
     var privKeyBuffer = new Buffer(req.body.privateKey, 'hex');
-    const tx = new Txs(rawTx,{'chain':'ropsten'});
+    const tx = new Txs(rawTx,{'chain':'mainnet'});
     tx.sign(privKeyBuffer);
     web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, tHash) {
 
