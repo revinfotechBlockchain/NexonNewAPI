@@ -667,12 +667,12 @@ module.exports = {
                             i++;
                             //element.Interest = (parseFloat(output) / 100).toFixed(6);
                             element.Shares = (parseFloat(element.StakerTokens)*100/parseFloat(totalStakeAmount)).toFixed(6);
-                            element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+                            element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 1000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
                             // element.Amount = (((parseInt(element.StakerTokens) * output )/10000) * Math.floor((parseInt(element.StakingEndTime) - Math.floor(new Date() / 1000))/86400)).toFixed(6)
                             if (element.StakingEndTime / 86400 > Date.now() / 86400000)
-                                element.Amount = (parseFloat(element.StakerTokens) + element.BigPayDay + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - Date.now() / 1000) / 86400).toFixed(6);
+                                element.Amount = (parseFloat(element.StakerTokens) + element.BigPayDay + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 1000 * (element.StakingEndTime - Date.now() / 1000) / 86400).toFixed(6);
                             else
-                                element.Amount = (parseFloat(element.StakerTokens) + element.BigPayDay + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+                                element.Amount = (parseFloat(element.StakerTokens) + element.BigPayDay + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 1000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
                             obj.push(element)
                         }
                     });
@@ -711,7 +711,7 @@ module.exports = {
                             if (element.TokenTransactionstatus != 'false') {
                                 i++;
                                 newContract && newContract.methods.getFinalWithdrawlStake(element.StakeId).call().then(async out2 => {
-                                    element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+                                    element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 1000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
                                     element.Shares = (parseFloat(element.StakerTokens)*100/parseFloat(totalStakeAmount)).toFixed(6);
                                     element.Amount = out2.toString() / 1000000000000000000;
                                     //   element.Amount = (parseFloat(element.StakerTokens) + ((element.StakerTokens * output)/10000) * (element.StakingEndTime - element.StakingStartTime)/86400).toFixed(6);
@@ -770,13 +770,13 @@ module.exports = {
                     docs.forEach(element => {
                         console.log(element.TokenTransactionstatus)
                         //if (element.TokenTransactionstatus == 'false') {
-                            element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+                            element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 1000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
 
                             // element.Amount = (((parseInt(element.StakerTokens) * output )/10000) * Math.floor((parseInt(element.StakingEndTime) - Math.floor(new Date() / 1000))/86400)).toFixed(6)
                             // if (element.StakingEndTime / 86400 > Date.now() / 86400000)
                             //     element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - Date.now() / 1000) / 86400).toFixed(6);
                             // else
-                                element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+                                element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 1000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
                             obj.push(element)
                         //}
                     });
@@ -808,7 +808,7 @@ module.exports = {
                         await newContract && newContract.methods.calculateBigPayDayReward((req.query.amount*1000000000000000000).toString(), Math.floor((req.query.endTime))).call().then(async output => {
                             await newContract.methods.getRewardPercentage().call().then(async out1 => {
                                 console.log("This is output", parseFloat(output));
-                                let stakeBonus = (((parseFloat(req.query.amount) * out1) / 10000).toFixed(6) * Math.floor((Math.floor(req.query.endTime) - Math.floor(new Date() / 1000)) / 86400)).toFixed(6);
+                                let stakeBonus = (((parseFloat(req.query.amount) * out1) / 1000).toFixed(6) * Math.floor((Math.floor(req.query.endTime) - Math.floor(new Date() / 1000)) / 86400)).toFixed(6);
                                 let amountAfterStake = (parseFloat(req.query.amount) + parseFloat(stakeBonus)).toFixed(6);
                                 let bigPayDay = (parseFloat(output)/1000000000000000000).toFixed(6);
                                 let stakeShares = (parseFloat(req.query.amount)*100/parseFloat(totalStakeAmount)).toFixed(6);
