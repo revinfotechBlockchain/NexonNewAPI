@@ -670,9 +670,9 @@ module.exports = {
                             element.Interest = ((parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
                             // element.Amount = (((parseInt(element.StakerTokens) * output )/10000) * Math.floor((parseInt(element.StakingEndTime) - Math.floor(new Date() / 1000))/86400)).toFixed(6)
                             if (element.StakingEndTime / 86400 > Date.now() / 86400000)
-                                element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - Date.now() / 1000) / 86400).toFixed(6);
+                                element.Amount = (parseFloat(element.StakerTokens) + element.BigPayDay + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - Date.now() / 1000) / 86400).toFixed(6);
                             else
-                                element.Amount = (parseFloat(element.StakerTokens) + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
+                                element.Amount = (parseFloat(element.StakerTokens) + element.BigPayDay + (parseFloat(element.StakerTokens) * (parseFloat(output)).toFixed(6)) / 10000 * (element.StakingEndTime - element.StakingStartTime) / 86400).toFixed(6);
                             obj.push(element)
                         }
                     });
