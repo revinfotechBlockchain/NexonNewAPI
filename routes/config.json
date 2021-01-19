@@ -5,7 +5,8 @@
     },
     "etherscanEndPoint": "api.etherscan.io",
     "connectionURL": "https://mainnet.infura.io/v3/92a626fb48cc4368a08cb87b51b6e967",
-    "contractAddress": "0x4111a46c0B594c8c5b51318d6d1cbca6780f978B",
+    "contractAddress": "0xA87912A8F01Ce13BBfeD00F4BF3d5F7d958dB577",
+    "contractAddressTestnet": "0x4111a46c0B594c8c5b51318d6d1cbca6780f978B",
     "veryOldContractAddress": "0x7c233BAd8D8bfB00eB720C6a0cf241c5e76B8A36",
     "connectionURLNode": "http://18.219.16.131:8546",
     "contractAddressByManish": "0xd641453554f59926BC169721938419381d8ADb04"
