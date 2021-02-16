@@ -1160,6 +1160,26 @@ router.post('/withdrawReferralWithPvtKey', contractApi.withdrawReferral);
    router.get('/getABI', BackendAPI.getABI);
    
 
+       /**
+    * 
+    * @typedef getPairExchangeDetail
+    */
+    /**
+    * @route GET /api/eth/nexon/getPairExchangeDetail
+    * @security Basic Auth
+    */
+   router.get('/getPairExchangeDetail', BackendAPI.getPairExchangeDetail);
+
+   /**
+    * 
+    * @typedef getGlobalPairExchangeDetail
+    */
+    /**
+    * @route GET /api/eth/nexon/getGlobalPairExchangeDetail
+    * @security Basic Auth
+    */
+   router.get('/getGlobalPairExchangeDetail', BackendAPI.getGlobalPairExchangeDetail);
+
     
 
 module.exports= router

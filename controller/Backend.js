@@ -20,6 +20,7 @@ const UserAddressAndStakeID = mongoose.model('UserAddressAndStakeID');
 const TransformTokens = mongoose.model('TransformTokens');
 const referalManager = mongoose.model('ReferalManager');
 const NexDatabase = mongoose.model('NexDatabase');
+const pairExchangeDetail = mongoose.model('pairExchangeDetail');
 
 const funct = {
     async getTotalStakedAmount (){
@@ -1054,5 +1055,48 @@ module.exports = {
 
     getABI: async (req, res) => {
         res.send({ key: abi })
-    }
+    },
+    getPairExchangeDetail: async (req, res) => {
+        var details = await pairExchangeDetail.find((err, docs) => {
+        });
+        var raw = {data : (details[0].data.marketData).slice(0, 20)};
+        var endData = [];
+        var i = 0;
+        
+        raw.data.forEach(async elements => {
+            console.log(elements.coin_id);
+            var finalObj = elements;
+            i = i +1;
+            console.log(i)
+            endData.push(finalObj)
+            // console.log(docs[0])
+            console.log(raw.data.length,i)
+           //}
+           if (raw.data.length == i){
+            res.send(endData)
+            }
+            //});
+        });
+        // res.send({data : (details[0].data.marketData).slice(0, 20)})
+    },
+
+    getGlobalPairExchangeDetail: async (req, res) => {
+        var details = await pairExchangeDetail.find((err, docs) => {
+        });
+        var raw = {data : details[0].data.marketData};
+        var endData = [];
+        var i = 0;
+        raw.data.forEach(async elements => {
+            var finalObj = elements;
+            i = i +1;
+            endData.push(finalObj)
+            //console.log(docs[0])
+            console.log(raw.data.length,i)
+           //}
+           if (raw.data.length == i){
+            res.send(endData)
+            }
+            //});
+        });
+    },
 }

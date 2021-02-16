@@ -13,3 +13,4 @@ require('./UserAddressAndStakeID');
 require('./TransformTokens');
 require('./BTCDatabase');
 require('./NexDatabase');
+require('./pairExchangeDetail')
